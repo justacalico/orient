@@ -47,7 +47,9 @@ class _TorrentDetailPanelState extends State<TorrentDetailPanel> {
     super.initState();
     final state = context.read<AppState>();
     if (!state.detailProperties.containsKey(widget.hash)) {
-      state.openDetail(widget.hash);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) state.loadDetail(widget.hash);
+      });
     }
   }
 

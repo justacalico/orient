@@ -31,12 +31,18 @@ class ServerProfile {
     var input = raw.trim();
     if (input.isEmpty) return input;
     if (!input.contains('://')) input = 'http://$input';
-    var uri = Uri.parse(input);
+    final uri = Uri.parse(input);
     var path = uri.path;
     while (path.endsWith('/')) {
       path = path.substring(0, path.length - 1);
     }
-    return uri.replace(path: path, query: '', fragment: '').toString();
+    return Uri(
+      scheme: uri.scheme,
+      userInfo: uri.userInfo,
+      host: uri.host,
+      port: uri.hasPort ? uri.port : null,
+      path: path,
+    ).toString();
   }
 
   ServerProfile copyWith({

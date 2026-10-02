@@ -56,30 +56,32 @@ class _RssPageState extends State<RssPage> {
         ),
         SizedBox(
           height: 36,
-          child: ListView(
+          child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 6),
-                child: _FeedChip(
-                  label: 'All feeds',
-                  selected: _selectedFeed == null,
-                  onTap: () => setState(() => _selectedFeed = null),
-                ),
-              ),
-              for (final f in feeds)
+            child: Row(
+              children: [
                 Padding(
                   padding: const EdgeInsets.only(right: 6),
                   child: _FeedChip(
-                    label:
-                        '${f.feed.name}${f.feed.unreadCount > 0 ? ' (${f.feed.unreadCount})' : ''}',
-                    selected: _selectedFeed == f.path,
-                    onTap: () => setState(() => _selectedFeed = f.path),
-                    onLongPress: () => _feedMenu(context, f.path, f.feed),
+                    label: 'All feeds',
+                    selected: _selectedFeed == null,
+                    onTap: () => setState(() => _selectedFeed = null),
                   ),
                 ),
-            ],
+                for (final f in feeds)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 6),
+                    child: _FeedChip(
+                      label:
+                          '${f.feed.name}${f.feed.unreadCount > 0 ? ' (${f.feed.unreadCount})' : ''}',
+                      selected: _selectedFeed == f.path,
+                      onTap: () => setState(() => _selectedFeed = f.path),
+                      onLongPress: () => _feedMenu(context, f.path, f.feed),
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
         const Divider(height: 16),
@@ -131,7 +133,13 @@ class _RssPageState extends State<RssPage> {
         : entry.item.torrentUrl;
     if (url.isNotEmpty) {
       final uri = Uri.tryParse(url);
-      if (uri != null) await launchUrl(uri);
+      if (uri != null) {
+        try {
+          await launchUrl(uri);
+        } catch (_) {
+          // No handler for the URL on this platform.
+        }
+      }
     }
   }
 

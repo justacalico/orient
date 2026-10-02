@@ -76,9 +76,13 @@ class _Toolbar extends StatelessWidget {
       child: Row(
         children: [
           if (hasSelection) ...[
-            Text('${selected.length} selected',
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+            Flexible(
+              child: Text('${selected.length} selected',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w600)),
+            ),
             const SizedBox(width: 4),
             IconButton(
               icon: const Icon(Icons.close_rounded, size: 20),
@@ -545,20 +549,22 @@ class _FilterBar extends StatelessWidget {
           const SizedBox(height: 8),
           SizedBox(
             height: 34,
-            child: ListView(
+            child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
-              children: [
-                for (final f in TorrentFilter.values)
-                  Padding(
-                    padding: const EdgeInsets.only(right: 6),
-                    child: _FilterChip(
-                      label: f.label,
-                      count: _countFor(state, f),
-                      selected: state.filter == f,
-                      onTap: () => state.setFilter(f),
+              child: Row(
+                children: [
+                  for (final f in TorrentFilter.values)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 6),
+                      child: _FilterChip(
+                        label: f.label,
+                        count: _countFor(state, f),
+                        selected: state.filter == f,
+                        onTap: () => state.setFilter(f),
+                      ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
           ),
         ],
@@ -567,7 +573,6 @@ class _FilterBar extends StatelessWidget {
   }
 
   int _countFor(AppState state, TorrentFilter f) {
-    if (f == TorrentFilter.all) return state.torrents.length;
     return state.torrents.values.where((t) {
       return switch (f) {
         TorrentFilter.downloading => t.state.isDownloading,
@@ -716,7 +721,6 @@ class _TorrentList extends StatelessWidget {
     }
     return ListView.builder(
       itemCount: torrents.length,
-      itemExtent: 76,
       itemBuilder: (context, i) => _TorrentTile(torrent: torrents[i]),
     );
   }
@@ -803,6 +807,7 @@ class _TorrentTile extends StatelessWidget {
               width: 64,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
@@ -883,37 +888,56 @@ class _StatusBar extends StatelessWidget {
         border: Border(
             top: BorderSide(color: OrientTheme.hairline(context), width: 0.5)),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-      child: Row(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      height: 30,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        physics: const NeverScrollableScrollPhysics(),
         children: [
-          StatusDot(
-            color: s.connected
-                ? const Color(0xFF2E7D4F)
-                : s.firewalled
-                    ? const Color(0xFF9A7B00)
-                    : scheme.error,
+          Center(
+            child: StatusDot(
+              color: s.connected
+                  ? const Color(0xFF2E7D4F)
+                  : s.firewalled
+                      ? const Color(0xFF9A7B00)
+                      : scheme.error,
+            ),
           ),
           const SizedBox(width: 6),
-          Text(s.connectionLabel,
-              style: TextStyle(fontSize: 11.5, color: muted)),
+          Center(
+            child: Text(s.connectionLabel,
+                style: TextStyle(fontSize: 11.5, color: muted)),
+          ),
           const SizedBox(width: 14),
-          Icon(Icons.arrow_downward_rounded, size: 13, color: muted),
+          Center(
+              child:
+                  Icon(Icons.arrow_downward_rounded, size: 13, color: muted)),
           const SizedBox(width: 3),
-          Text(formatSpeed(s.dlInfoSpeed),
-              style: TextStyle(fontSize: 11.5, color: muted)),
+          Center(
+            child: Text(formatSpeed(s.dlInfoSpeed),
+                style: TextStyle(fontSize: 11.5, color: muted)),
+          ),
           const SizedBox(width: 10),
-          Icon(Icons.arrow_upward_rounded, size: 13, color: muted),
+          Center(
+              child:
+                  Icon(Icons.arrow_upward_rounded, size: 13, color: muted)),
           const SizedBox(width: 3),
-          Text(formatSpeed(s.upInfoSpeed),
-              style: TextStyle(fontSize: 11.5, color: muted)),
-          const Spacer(),
-          if (s.useAltSpeedLimits)
-            Icon(Icons.slow_motion_video_rounded,
-                size: 14, color: scheme.primary),
-          const SizedBox(width: 8),
-          Text(
-            '${state.torrents.length} torrents',
-            style: TextStyle(fontSize: 11.5, color: muted),
+          Center(
+            child: Text(formatSpeed(s.upInfoSpeed),
+                style: TextStyle(fontSize: 11.5, color: muted)),
+          ),
+          const SizedBox(width: 14),
+          if (s.useAltSpeedLimits) ...[
+            Center(
+                child: Icon(Icons.slow_motion_video_rounded,
+                    size: 14, color: scheme.primary)),
+            const SizedBox(width: 8),
+          ],
+          Center(
+            child: Text(
+              '${state.torrents.length} torrents',
+              style: TextStyle(fontSize: 11.5, color: muted),
+            ),
           ),
         ],
       ),

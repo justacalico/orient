@@ -336,19 +336,6 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void selectRange(List<String> orderedHashes) {
-    if (detailHash == null || !orderedHashes.contains(detailHash)) return;
-    final anchor = orderedHashes.indexOf(detailHash!);
-    final target = orderedHashes.indexWhere((h) => selected.contains(h));
-    if (target < 0 || anchor < 0) return;
-    final lo = anchor < target ? anchor : target;
-    final hi = anchor < target ? target : anchor;
-    selected
-      ..clear()
-      ..addAll(orderedHashes.sublist(lo, hi + 1));
-    notifyListeners();
-  }
-
   void clearSelection() {
     selected.clear();
     notifyListeners();
@@ -643,10 +630,19 @@ class AppState extends ChangeNotifier {
     await refreshRss();
   }
 
+  bool _disposed = false;
+
   @override
   void dispose() {
+    _disposed = true;
     _pollTimer?.cancel();
     _api?.close();
     super.dispose();
+  }
+
+  @override
+  void notifyListeners() {
+    if (_disposed) return;
+    super.notifyListeners();
   }
 }
