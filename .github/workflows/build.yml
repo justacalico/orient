@@ -259,6 +259,18 @@ jobs:
             cp build/app/outputs/bundle/debug/app-debug.aab "$ARTIFACTS_DIR/orient-android.aab"
           fi
 
+      - name: Verify release signature
+        if: matrix.target == 'android' && steps.signing.outputs.signing == 'release'
+        run: |
+          set -euo pipefail
+          APKSIGNER=$(find "$ANDROID_HOME/build-tools" -name apksigner | sort -V | tail -1)
+          APK="$GITHUB_WORKSPACE/artifacts/orient-android.apk"
+          if "$APKSIGNER" verify --print-certs "$APK" | grep -q "Android Debug"; then
+            echo "APK is debug-signed on a release build. Refusing to ship." >&2
+            exit 1
+          fi
+          "$APKSIGNER" verify --print-certs "$APK"
+
       - name: Build Linux desktop packages
         if: startsWith(matrix.target, 'linux')
         run: |
