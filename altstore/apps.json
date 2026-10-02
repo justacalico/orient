@@ -1,0 +1,23 @@
+{
+  "name": "Orient",
+  "identifier": "com.httpanimations.orient.source",
+  "iconURL": "https://gitlab.com/HttpAnimations/orient/-/raw/main/assets/icon-1024.png",
+  "apps": [
+    {
+      "name": "Orient",
+      "bundleIdentifier": "com.httpanimations.orient",
+      "developerName": "HttpAnimations",
+      "iconURL": "https://gitlab.com/HttpAnimations/orient/-/raw/main/assets/icon-1024.png",
+      "tintedIconURL": "https://gitlab.com/HttpAnimations/orient/-/raw/main/assets/icon-1024.png",
+      "subtitle": "Local-first encrypted notes",
+      "versions": [
+        {
+          "version": "nightly",
+          "date": "2026-09-26T19:09:04Z",
+          "downloadURL": "https://gitlab.com/api/v4/projects/HttpAnimations%2Forient/packages/generic/release-assets/nightly/orient-ios-arm64-unsigned%2Eipa",
+          "minOSVersion": "14.0"
+        }
+      ]
+    }
+  ]
+}
