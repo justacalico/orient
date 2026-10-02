@@ -9,7 +9,7 @@
       "developerName": "HttpAnimations",
       "iconURL": "https://gitlab.com/HttpAnimations/orient/-/raw/main/assets/icon-1024.png",
       "tintedIconURL": "https://gitlab.com/HttpAnimations/orient/-/raw/main/assets/icon-1024.png",
-      "subtitle": "Local-first encrypted notes",
+      "subtitle": "qBittorrent WebUI remote client",
       "versions": [
         {
           "version": "nightly",

@@ -35,7 +35,7 @@ cat > altstore/apps.json <<JSON
       "developerName": "HttpAnimations",
       "iconURL": "$ICON_URL",
       "tintedIconURL": "$ICON_URL",
-      "subtitle": "Local-first encrypted notes",
+      "subtitle": "qBittorrent WebUI remote client",
       "versions": [
         {
           "version": "$VERSION",
