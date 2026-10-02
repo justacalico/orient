@@ -54,6 +54,7 @@ Grab the platform archive from releases. The web build is also hosted at
 flutter pub get
 flutter run
 flutter test --coverage
+flutter test --update-goldens   # regenerate golden screenshots in test/goldens/
 ```
 
 ## License
